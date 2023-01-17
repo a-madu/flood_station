@@ -1,0 +1,5 @@
+# Drupal 9 specific files and directories
+vendor/
+.idea/
+web/sites/default/files/
+web/sites/default/settings.php
