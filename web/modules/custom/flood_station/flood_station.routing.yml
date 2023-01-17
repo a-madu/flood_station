@@ -1,0 +1,7 @@
+flood_station.getStations:
+  path: '/getstations'
+  defaults:
+    _controller: '\Drupal\flood_station\Controller\flood_stationController::getStations'
+    _title: 'Welcome to the flood Station'
+  requirements:
+    _permission: 'access content'
