@@ -1,7 +1,24 @@
-flood_station.getStations:
-  path: '/getstations'
+flood_station.get_stations:
+  path: '/flood-station'
   defaults:
     _controller: '\Drupal\flood_station\Controller\FloodStationController::getStations'
-    _title: 'Welcome to the flood Station'
+    _title: 'Get Flood Stations'
+  methods: [GET]
+  options:
+    _admin_route: true
+  requirements:
+    _access: 'TRUE'
+flood_station.flood_station_form:
+  path: '/flood-station-form'
+  defaults:
+    _form: '\Drupal\flood_station\Form\FloodStationForm'
+    _title: 'Flood Station Form'
+  requirements:
+    _permission: 'access content'
+flood_station.reading:
+  path: '/flood-station/reading/{id}'
+  defaults:
+    _controller: 'flood_station.FloodStationController:getStation'
+    _title: 'Flood Station Reading'
   requirements:
     _permission: 'access content'

@@ -2,35 +2,41 @@
 
 namespace Drupal\flood_station\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\flood_station\Services\FloodStationService;
+use Drupal\flood_station\FloodStationService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * FloodStationController class.
+ * Class MyController.
  */
-class FloodStationController extends ControllerBase {
-
-  protected $flood_station_service;
+class FloodStationController {
 
   /**
-   * FloodStationController constructor.
+   * FloodStationService definition.
    *
-   * @param \Drupal\flood_station\Services\FloodStationService $flood_station_service
+   * @var \Drupal\flood_station\FloodStationService
+   */
+  protected $floodStationService;
+
+  /**
+   * MyController constructor.
+   *
+   * @param \Drupal\flood_station\FloodStationService $flood_station_service
    */
   public function __construct(FloodStationService $flood_station_service) {
-    $this->flood_station_service = $flood_station_service;
+    $this->floodStationService = $flood_station_service;
   }
 
   /**
-   * Get the flood stations.
-   *
-   * @return array
+   * Returns a JSON response of all stations.
    */
   public function getStations() {
-    $stations = $this->flood_station_service->getStations();
-    $station = $this->flood_station_service->getStation();
-    dump($stations);
-    dump($station);
+    $stations = $this->floodStationService->getStations();
+    return new JsonResponse($stations);
   }
 
+    public function getStation($id) {
+    $readings = $this->floodStationService->getStation($id);
+    return new JsonResponse($readings);
+  }
 }
+
