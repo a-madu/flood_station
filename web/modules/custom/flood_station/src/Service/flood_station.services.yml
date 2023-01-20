@@ -1,0 +1,4 @@
+services:
+  flood_station.service:
+    class: Drupal\flood_station\Services\FloodStationService
+    arguments: ['@http_client']
