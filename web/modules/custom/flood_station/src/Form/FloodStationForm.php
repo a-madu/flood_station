@@ -52,12 +52,20 @@ class FloodStationForm extends FormBase {
    *   An array of stations.
    */
   private function getStationOptions(){
-    $options = [];
     $flood_station_service = \Drupal::service('flood_station.flood_station_service');
     $stations = $flood_station_service->getStations();
-    foreach($stations as $station) {
-      $options[$station['url']] = $station['name'];
+    if (isset($stations['error']) && $stations['error'] === true) {
+      \Drupal::logger('flood_getStationOptions')->error('Error getting data:'. $stations['message']);
+    } else {
+      $options = [];
+      usort($stations, function($a, $b) {
+        return strcmp($a['name'], $b['name']);
+      });
+      foreach($stations as $station) {
+        $options[$station['url']] = $station['name'];
+      }
+      return $options;
     }
-    return $options;
   }
+
 }
