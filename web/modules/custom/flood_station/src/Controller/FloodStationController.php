@@ -2,24 +2,41 @@
 
 namespace Drupal\flood_station\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Drupal\flood_station\Services\FloodStationService;
-use GuzzleHttp\Client;
+use Drupal\flood_station\FloodStationService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * FloodStationController class.
+ * Class MyController.
  */
-class FloodStationController extends ControllerBase {
+class FloodStationController {
 
   /**
-   * Get the flood stations.
+   * FloodStationService definition.
    *
-   * @return array
+   * @var \Drupal\flood_station\FloodStationService
    */
-  public function getStations() {
-    $flood_station_service = new FloodStationService(new Client());
-    $stations = $flood_station_service->getStations();
-    dump($stations);
+  protected $floodStationService;
+
+  /**
+   * MyController constructor.
+   *
+   * @param \Drupal\flood_station\FloodStationService $flood_station_service
+   */
+  public function __construct(FloodStationService $flood_station_service) {
+    $this->floodStationService = $flood_station_service;
   }
 
+  /**
+   * Returns a JSON response of all stations.
+   */
+  public function getStations() {
+    $stations = $this->floodStationService->getStations();
+    return new JsonResponse($stations);
+  }
+
+    public function getStation($id) {
+    $readings = $this->floodStationService->getStation($id);
+    return new JsonResponse($readings);
+  }
 }
+

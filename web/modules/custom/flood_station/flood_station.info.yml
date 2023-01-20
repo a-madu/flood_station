@@ -1,6 +1,6 @@
-name: Flood station
+name: Flood Station
 type: module
-description: 'Flood station module to provide flood station data.'
+description: 'A module that provides a service to get flood station information.'
 package: Custom
-version: 1.0
+version: '9.0.0'
 core_version_requirement: ^9
