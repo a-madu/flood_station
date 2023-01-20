@@ -40,6 +40,7 @@ class FloodStationForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    //todo pass the notation/name put into nested array as parent to add as title
     $form_values = $form_state->getValue('station');
     $url = Url::fromRoute('flood_station.reading', ['id' => $form_values]);
     $form_state->setRedirectUrl($url);

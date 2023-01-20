@@ -57,6 +57,7 @@ class FloodStationController {
         ];
       }
       $build = array(
+        '#title' => 'Station Data',
         '#type' => 'table',
         '#header' => $header,
         '#rows' => $rows,
