@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Drupal\flood_station\Form;
 
 use Drupal\Core\Form\FormBase;
@@ -9,14 +8,18 @@ use Drupal\Core\Url;
 
 /**
  * Class FloodStationForm.
+ *
+ * @package Drupal\flood_station\Form
  */
 class FloodStationForm extends FormBase {
+
   /**
    * {@inheritdoc}
    */
   public function getFormId() {
     return 'flood_station_form';
   }
+
   /**
    * {@inheritdoc}
    */
@@ -32,23 +35,28 @@ class FloodStationForm extends FormBase {
     ];
     return $form;
   }
+
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Perform actions on form submission
     $form_values = $form_state->getValue('station');
-    \Drupal::logger('flood_station')->notice('Form values: <pre>' . print_r($form_values, TRUE) . '</pre>');
     $url = Url::fromRoute('flood_station.reading', ['id' => $form_values]);
     $form_state->setRedirectUrl($url);
   }
 
+  /**
+   * Get the list of stations.
+   *
+   * @return array
+   *   An array of stations.
+   */
   private function getStationOptions(){
     $options = [];
     $flood_station_service = \Drupal::service('flood_station.flood_station_service');
     $stations = $flood_station_service->getStations();
     foreach($stations as $station) {
-        $options[$station['url']] = $station['name'];
+      $options[$station['url']] = $station['name'];
     }
     return $options;
   }

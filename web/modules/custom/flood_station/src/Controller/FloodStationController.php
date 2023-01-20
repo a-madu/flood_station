@@ -13,14 +13,14 @@ class FloodStationController {
   /**
    * FloodStationService definition.
    *
-   * @var \Drupal\flood_station\FloodStationService
+   * @var FloodStationService
    */
   protected $floodStationService;
 
   /**
    * MyController constructor.
    *
-   * @param \Drupal\flood_station\Service\FloodStationService $flood_station_service
+   * @param FloodStationService $flood_station_service
    */
   public function __construct(FloodStationService $flood_station_service) {
     $this->floodStationService = $flood_station_service;
@@ -34,23 +34,26 @@ class FloodStationController {
     return new JsonResponse($stations);
   }
 
+  /**
+   * Returns a JSON response for station data.
+   */
   public function getStation($id)
   {
-    $readings = $this->floodStationService->getStation($id);
-    if ($readings == 'error') {
-      return new JsonResponse($readings);
+    $station_data = $this->floodStationService->getStation($id);
+    $readings = json_decode($station_data,true);
+    if (isset($readings['error']) && $readings['error'] === true) {
+      \Drupal::messenger()->addError($readings['message']);
+      return [];
     } else {
       $header = [
         'Date',
-        'Value',
-        'Measure'
+        'measurement'
       ];
       $rows = array();
       foreach ($readings as $reading) {
         $rows[] = [
-          'date' => $reading['dateTime'],
-          'value' => $reading['value'],
-          'measure' => $reading['measure']
+          'date' => $reading['date'],
+          'measure' => $reading['measurement']
         ];
       }
       $build = array(
@@ -61,7 +64,6 @@ class FloodStationController {
           'id' => 'reading-table',
         ),
       );
-
       return $build;
     }
   }
