@@ -53,7 +53,7 @@ class FloodStationService
   public function getStation($id)
   {
     try {
-      $response = $this->client->get("https://envient.data.gov.uk/flood-monitoring/id/stations/{$id}/readings?_sorted&_limit=10");
+      $response = $this->client->get("https://environment.data.gov.uk/flood-monitoring/id/stations/{$id}/readings?_sorted&_limit=10");
       $data = json_decode($response->getBody(), TRUE);
       $readingsData = array();
       foreach ($data['items'] as $reading) {
