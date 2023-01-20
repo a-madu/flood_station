@@ -2,7 +2,7 @@
 
 namespace Drupal\flood_station\Controller;
 
-use Drupal\flood_station\FloodStationService;
+use Drupal\flood_station\Service\FloodStationService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -20,7 +20,7 @@ class FloodStationController {
   /**
    * MyController constructor.
    *
-   * @param \Drupal\flood_station\FloodStationService $flood_station_service
+   * @param \Drupal\flood_station\Service\FloodStationService $flood_station_service
    */
   public function __construct(FloodStationService $flood_station_service) {
     $this->floodStationService = $flood_station_service;
@@ -34,9 +34,36 @@ class FloodStationController {
     return new JsonResponse($stations);
   }
 
-    public function getStation($id) {
+  public function getStation($id)
+  {
     $readings = $this->floodStationService->getStation($id);
-    return new JsonResponse($readings);
+    if ($readings == 'error') {
+      return new JsonResponse($readings);
+    } else {
+      $header = [
+        'Date',
+        'Value',
+        'Measure'
+      ];
+      $rows = array();
+      foreach ($readings as $reading) {
+        $rows[] = [
+          'date' => $reading['dateTime'],
+          'value' => $reading['value'],
+          'measure' => $reading['measure']
+        ];
+      }
+      $build = array(
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => $rows,
+        '#attributes' => array(
+          'id' => 'reading-table',
+        ),
+      );
+
+      return $build;
+    }
   }
 }
 

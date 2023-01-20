@@ -5,6 +5,7 @@ namespace Drupal\flood_station\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 /**
  * Class FloodStationForm.
@@ -20,7 +21,6 @@ class FloodStationForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-      // $form['#attributes']['onsubmit'] = 'event.preventDefault();';
     $form['station'] = [
       '#type' => 'select',
       '#title' => $this->t('Select a station'),
@@ -39,7 +39,8 @@ class FloodStationForm extends FormBase {
     // Perform actions on form submission
     $form_values = $form_state->getValue('station');
     \Drupal::logger('flood_station')->notice('Form values: <pre>' . print_r($form_values, TRUE) . '</pre>');
-    $form_state->setRedirectUrl( '/flood-station/reading/'.$form_values);
+    $url = Url::fromRoute('flood_station.reading', ['id' => $form_values]);
+    $form_state->setRedirectUrl($url);
   }
 
   private function getStationOptions(){
