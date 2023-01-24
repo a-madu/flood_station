@@ -1,6 +1,6 @@
 services:
   flood_station.flood_station_service:
-    class: Drupal\flood_station\FloodStationService
+    class: Drupal\flood_station\Service\FloodStationService
     arguments: ['@http_client']
   flood_station.FloodStationController:
     class: Drupal\flood_station\Controller\FloodStationController

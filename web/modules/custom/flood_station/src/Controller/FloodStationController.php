@@ -2,7 +2,7 @@
 
 namespace Drupal\flood_station\Controller;
 
-use Drupal\flood_station\FloodStationService;
+use Drupal\flood_station\Service\FloodStationService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -13,14 +13,14 @@ class FloodStationController {
   /**
    * FloodStationService definition.
    *
-   * @var \Drupal\flood_station\FloodStationService
+   * @var FloodStationService
    */
   protected $floodStationService;
 
   /**
    * MyController constructor.
    *
-   * @param \Drupal\flood_station\FloodStationService $flood_station_service
+   * @param FloodStationService $flood_station_service
    */
   public function __construct(FloodStationService $flood_station_service) {
     $this->floodStationService = $flood_station_service;
@@ -34,9 +34,39 @@ class FloodStationController {
     return new JsonResponse($stations);
   }
 
-    public function getStation($id) {
-    $readings = $this->floodStationService->getStation($id);
-    return new JsonResponse($readings);
+  /**
+   * Returns a JSON response for station data.
+   */
+  public function getStation($id)
+  {
+    $station_data = $this->floodStationService->getStation($id);
+    $readings = json_decode($station_data,true);
+    if (isset($readings['error']) && $readings['error'] === true) {
+      \Drupal::messenger()->addError($readings['message']);
+      return [];
+    } else {
+      $header = [
+        'Date',
+        'measurement'
+      ];
+      $rows = array();
+      foreach ($readings as $reading) {
+        $rows[] = [
+          'date' => $reading['date'],
+          'measure' => $reading['measurement']
+        ];
+      }
+      $build = array(
+        '#title' => 'Station Data',
+        '#type' => 'table',
+        '#header' => $header,
+        '#rows' => $rows,
+        '#attributes' => array(
+          'id' => 'reading-table',
+        ),
+      );
+      return $build;
+    }
   }
 }
 
